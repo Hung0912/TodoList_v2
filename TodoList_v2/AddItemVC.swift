@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AddItemVCDelegate : class {
-    func addPressed(item : ToDoItem)
+    func didAdd(item : ToDoItem)
 }
 
 class AddItemVC: UIViewController {
@@ -119,6 +119,7 @@ class AddItemVC: UIViewController {
     }
     
     func setupLayout(){
+        view.backgroundColor = .white
         layoutTitle()
         layoutContent()
         layoutAddButton()
@@ -129,7 +130,7 @@ class AddItemVC: UIViewController {
         guard let title = self.titleTextField.text else {return}
         let addItem = ToDoItem(title: title)
         addItem.content  = self.contentTextField.text
-        self.delegate?.addPressed(item: addItem)
+        self.delegate?.didAdd(item: addItem)
         
         navigationController?.popToRootViewController(animated: true)
     }

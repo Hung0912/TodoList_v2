@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ToDoCellTableViewCellDelegate : class{
-    func didComplete(cell: TodoCell)
+    func didComplete(item: ToDoItem)
 }
 
 class TodoCell: UITableViewCell {
@@ -103,21 +103,13 @@ class TodoCell: UITableViewCell {
         
     }
     
-    
-    @objc func checkedBox(_ sender: UIButton) {
-        delegate?.didComplete(cell: self)
-    }
-
-    func updateUICell(){
-        self.dateLbl.text = self.item.startDate
-        self.todoTitleLbl.text = self.item.title
-        if self.item.isDone{
-            self.checkBox.isSelected = true
-        }else{
-            self.checkBox.isSelected = false
-        }
+    func updateUICell(item: ToDoItem){
+        self.dateLbl.text = item.startDate
+        self.todoTitleLbl.text = item.title
         
-        guard let endDate = self.item.endDate else {
+        guard let endDate = item.endDate else {
+            self.endDateLbl.isHidden = true
+            self.checkBox.isHidden = false
             return
         }
         self.endDateLbl.isHidden = false
@@ -125,4 +117,8 @@ class TodoCell: UITableViewCell {
         self.checkBox.isHidden = true
     }
     
+    @objc func checkedBox(_ sender: UIButton) {
+        delegate?.didComplete(item: self.item)
+    }
+
 }

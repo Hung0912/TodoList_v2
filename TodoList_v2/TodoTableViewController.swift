@@ -77,18 +77,26 @@ class TodoTableViewController: UITableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! TodoCell
-        cell.delegate = self
-        if indexPath.section == 0 {
-            cell.item = doingList[indexPath.row]
-            cell.updateUICell()
+        if let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TodoCell{
+            cell.delegate = self
+            if indexPath.section == 0 {
+                print("Dmmmmmmmm")
+                let item = doingList[indexPath.row]
+                cell.item = item
+                cell.updateUICell(item: item)
+            }
+            if indexPath.section == 1 {
+                let item = completedList[indexPath.row]
+                cell.item = item
+                cell.updateUICell(item: item)
+            }
+            return cell
         }
-        if indexPath.section == 1 {
-            cell.item = completedList[indexPath.row]
-            cell.updateUICell()
-        }
-        return cell
+        return UITableViewCell()
+
+        
     }
+    
     
     // Header of section
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?{
@@ -122,7 +130,6 @@ class TodoTableViewController: UITableViewController{
 //        let sb = UIStoryboard(name: "Main", bundle: nil)
 //        let detailScreen = sb.instantiateViewController(withIdentifier: "DetailScreen") as! ItemDetailVC
         let detailScreen = ItemDetailVC()
-//        print(toDoList[indexPath.row].title)
         if indexPath.section == 0 {
             detailScreen.item = doingList[indexPath.row]
         }else{
@@ -137,8 +144,7 @@ class TodoTableViewController: UITableViewController{
     
     
     @objc func addClicked(){
-        let sb = UIStoryboard(name: "Main", bundle: nil)
-        let addScreen = sb.instantiateViewController(withIdentifier: "AddScreen") as! AddItemVC
+        let addScreen = AddItemVC()
         self.navigationController?.pushViewController(addScreen, animated: true)
         addScreen.delegate = self
     }
@@ -154,7 +160,7 @@ class TodoTableViewController: UITableViewController{
             
             print("\(item.title)")
         }
-        print("----------Completed list:")
+        print("---------Completed list:")
         for item in completedList{
             
             print("\(item.title)")
@@ -165,35 +171,28 @@ class TodoTableViewController: UITableViewController{
 }
 
 extension TodoTableViewController: ToDoCellTableViewCellDelegate, ItemDetailVCDelegate, AddItemVCDelegate{
-    func addPressed(item: ToDoItem) {
+    
+    func didAdd(item: ToDoItem) {
         self.toDoList.append(item)
         self.loadData()
-        self.showArray()
+        //self.showArray()
     }
     
     func didSave(item: ToDoItem) {
         self.loadData()
-        self.showArray()
+        //self.showArray()
     }
     
-
-    
-    func didComplete(cell: TodoCell) {
-        print(cell.checkBox.isSelected)
-        if !cell.checkBox.isSelected {
-            cell.item.isDone = true
-            
-            let date = Date()
-            let calendar = Calendar.current
-            let day = calendar.component(.day, from: date)
-            let month = calendar.component(.month, from: date)
-            cell.item.endDate = "\(day)/\(month)"
-            
-        }else{
-            return
-        }
+    func didComplete(item: ToDoItem) {
+        item.isDone = true
+        let date = Date()
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: date)
+        let month = calendar.component(.month, from: date)
+        item.endDate = "\(day)/\(month)"
+        
         self.loadData()
-        self.showArray()
+        //self.showArray()
 
     }
     
