@@ -62,18 +62,50 @@
 		047913EA22C49DB700037769 /* TodoList_v2 */ = {
 			isa = PBXGroup;
 			children = (
+				60EADF8422C50D660035868B /* Models */,
+				60EADF8222C50D580035868B /* Views */,
+				60EADF8322C50D600035868B /* Controllers */,
+				60EADF8122C50D470035868B /* Files */,
 				047913EB22C49DB700037769 /* AppDelegate.swift */,
 				047913EF22C49DB700037769 /* Main.storyboard */,
 				047913F222C49DB900037769 /* Assets.xcassets */,
 				047913F422C49DB900037769 /* LaunchScreen.storyboard */,
 				047913F722C49DB900037769 /* Info.plist */,
-				047913FD22C49E5200037769 /* TodoTableViewController.swift */,
-				047913FF22C4A0A300037769 /* TodoCell.swift */,
-				0479140122C4A0E400037769 /* ToDoItem.swift */,
-				0479140322C4A26F00037769 /* ItemDetailVC.swift */,
-				0479140522C4A27D00037769 /* AddItemVC.swift */,
 			);
 			path = TodoList_v2;
+			sourceTree = "<group>";
+		};
+		60EADF8122C50D470035868B /* Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
+		60EADF8222C50D580035868B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				047913FF22C4A0A300037769 /* TodoCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		60EADF8322C50D600035868B /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0479140522C4A27D00037769 /* AddItemVC.swift */,
+				0479140322C4A26F00037769 /* ItemDetailVC.swift */,
+				047913FD22C49E5200037769 /* TodoTableViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		60EADF8422C50D660035868B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0479140122C4A0E400037769 /* ToDoItem.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
