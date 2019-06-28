@@ -10,12 +10,9 @@ import UIKit
 
 class TodoTableViewController: UITableViewController{
     
-    var sectionTitles : [String] = ["List", "Completed"]
-    
-    var toDoList = [ToDoItem]()
     var doingList = [ToDoItem]()
     var completedList = [ToDoItem]()
-    
+
     let cellId = "cellId"
     
     override func viewDidLoad() {
@@ -23,12 +20,16 @@ class TodoTableViewController: UITableViewController{
         createData()
         tableView.register(TodoCell.self, forCellReuseIdentifier: cellId)
         setupNavigationBar()
+    }
 
+
+    func createData(){
+        doingList.append(ToDoItem(title: "Do homework"))
+        doingList.append(ToDoItem(title: "Work out"))
     }
     
     func setupNavigationBar(){
         self.title = "Todo List"
-        
         let button  = UIButton(type: .custom)
         if let image = UIImage(named:"plus_icon") {
             button.setImage(image, for: .normal)
@@ -38,33 +39,34 @@ class TodoTableViewController: UITableViewController{
         navigationItem.rightBarButtonItem = barButton
     }
     
+    func showArray(){
+        print("---------Doing list:")
+        for item in doingList{
+            print("\(item.title)")
+        }
+        print("---------Completed list:")
+        for item in completedList{
+            print("\(item.title)")
+        }
+    }
+    
+    @objc func addTapped(){
+        let addScreen = AddItemVC()
+        self.navigationController?.pushViewController(addScreen, animated: true)
+        addScreen.delegate = self
+    }
+    
+}
 
-    
-    func createData(){
-        toDoList.append(ToDoItem(title: "Do homework"))
-        toDoList.append(ToDoItem(title: "Work out"))
-        loadTodoListData()
-    }
-    
-    func loadTodoListData(){
-        completedList = toDoList.filter {$0.isDone}
-        doingList = toDoList.filter {!$0.isDone}
-    }
-    
-    func loadData(){
-        //load data here
-        self.loadTodoListData()
-        self.tableView.reloadData()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//        self.loadData()
-    }
-    
+//Datasource
+extension TodoTableViewController{
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
+    
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
@@ -78,23 +80,36 @@ class TodoTableViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TodoCell{
-            cell.delegate = self
-            var todoItem: ToDoItem!
             if indexPath.section == 0 {
-                //print("Dmmmmmmmm")
-                todoItem = doingList[indexPath.row]
+                cell.item = doingList[indexPath.row]
             }
             if indexPath.section == 1 {
-                todoItem = completedList[indexPath.row]
+                cell.item = completedList[indexPath.row]
             }
-            cell.updateUICell(item: todoItem)
+            cell.updateUICell()
             return cell
         }
         return UITableViewCell()
-
+        
         
     }
     
+}
+
+//Delegate
+extension TodoTableViewController{
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailScreen = ItemDetailVC()
+        if indexPath.section == 0 {
+            detailScreen.item = doingList[indexPath.row]
+        }else{
+            detailScreen.item = completedList[indexPath.row]
+            detailScreen.item.isDone = true
+        }
+        self.navigationController?.pushViewController(detailScreen, animated: true)
+        detailScreen.delegate = self
+    }
     
     // Header of section
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?{
@@ -109,12 +124,12 @@ class TodoTableViewController: UITableViewController{
         headerTitle.font = UIFont.systemFont(ofSize: 15)
         headerTitle.textAlignment = .left
         
+        
         if section == 0 {
             headerTitle.text = "List"
         }else if section == 1 {
             headerTitle.text = "Completed"
         }
-        
         headerView.addSubview(headerIcon)
         headerView.addSubview(headerTitle)
         
@@ -124,75 +139,55 @@ class TodoTableViewController: UITableViewController{
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 47
     }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let sb = UIStoryboard(name: "Main", bundle: nil)
-//        let detailScreen = sb.instantiateViewController(withIdentifier: "DetailScreen") as! ItemDetailVC
-        let detailScreen = ItemDetailVC()
-        if indexPath.section == 0 {
-            detailScreen.item = doingList[indexPath.row]
-        }else{
-            detailScreen.item = completedList[indexPath.row]
-        }
-        
-        self.navigationController?.pushViewController(detailScreen, animated: true)
-        
-        detailScreen.delegate = self
-    }
-    
-    
-    @objc func addTapped(){
-        let addScreen = AddItemVC()
-        self.navigationController?.pushViewController(addScreen, animated: true)
-        addScreen.delegate = self
-    }
-    
-    func showArray(){
-        print("---------List:")
-        for item in toDoList{
-         
-            print("\(item.title)")
-        }
-        print("---------Doing list:")
-        for item in doingList{
-            
-            print("\(item.title)")
-        }
-        print("---------Completed list:")
-        for item in completedList{
-            
-            print("\(item.title)")
-        }
-    }
-    
-    
 }
 
-extension TodoTableViewController: ToDoCellTableViewCellDelegate, ItemDetailVCDelegate, AddItemVCDelegate{
-    
+extension TodoTableViewController{
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "delete") { (action, view, nil) in
+            print("Deleted")
+            if indexPath.section == 0{
+                self.doingList.remove(at: indexPath.row)
+            }else{
+                self.completedList.remove(at: indexPath.row)
+            }
+            tableView.reloadData()
+        }
+        let complete = UIContextualAction(style: .normal, title: "complete") { (action, view, nil) in
+            print("Completed")
+            self.completedList.append(self.doingList[indexPath.row])
+            self.doingList.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
+        
+        complete.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        var swipeAction = UISwipeActionsConfiguration()
+        if indexPath.section == 0{
+            swipeAction = UISwipeActionsConfiguration(actions: [delete,complete])
+            swipeAction.performsFirstActionWithFullSwipe = false
+        }
+        
+        if indexPath.section == 1 {
+            swipeAction = UISwipeActionsConfiguration(actions: [delete])
+            swipeAction.performsFirstActionWithFullSwipe = false
+        }
+        return swipeAction
+    }
+}
+
+
+extension TodoTableViewController: ItemDetailVCDelegate{
+    func didSave() {
+        self.tableView.reloadData()
+        //self.showArray()
+    }
+}
+
+extension TodoTableViewController: AddItemVCDelegate{
     func didAdd(item: ToDoItem) {
-        self.toDoList.append(item)
-        self.loadData()
+        self.doingList.append(item)
+        self.tableView.reloadData()
         //self.showArray()
     }
-    
-    func didSave(item: ToDoItem) {
-        self.loadData()
-        //self.showArray()
-    }
-    
-    func didComplete(item: ToDoItem) {
-        item.isDone = true
-        let date = Date()
-        let calendar = Calendar.current
-        let day = calendar.component(.day, from: date)
-        let month = calendar.component(.month, from: date)
-        item.endDate = "\(day)/\(month)"
-        
-        self.loadData()
-        //self.showArray()
-
-    }
-    
 }
+
 

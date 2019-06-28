@@ -50,15 +50,12 @@ class AddItemVC: UIViewController {
         return label
     }()
     
-    var contentTextField : UITextField = {
-        let tf = UITextField()
-        tf.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
-        tf.font = UIFont.systemFont(ofSize: 13)
-        tf.textAlignment = .left
-        tf.contentVerticalAlignment = .top
-        tf.borderStyle = UITextField.BorderStyle.roundedRect
-        tf.autocorrectionType = .no
-        return tf
+    var contentTextView : UITextView = {
+        let tv = UITextView()
+        tv.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        tv.font = UIFont.systemFont(ofSize: 13)
+        tv.textAlignment = .left
+        return tv
     }()
     
     var addBtn: UIButton = {
@@ -91,19 +88,19 @@ class AddItemVC: UIViewController {
     
     func layoutContent(){
         view.addSubview(contentLbl)
-        view.addSubview(contentTextField)
+        view.addSubview(contentTextView)
         
         contentLbl.translatesAutoresizingMaskIntoConstraints = false
-        contentTextField.translatesAutoresizingMaskIntoConstraints = false
+        contentTextView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             contentLbl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             contentLbl.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
             
-            contentTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            contentTextField.topAnchor.constraint(equalTo: contentLbl.bottomAnchor, constant: 5),
-            contentTextField.heightAnchor.constraint(equalToConstant: 165),
-            contentTextField.widthAnchor.constraint(equalToConstant: 344)
+            contentTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            contentTextView.topAnchor.constraint(equalTo: contentLbl.bottomAnchor, constant: 5),
+            contentTextView.heightAnchor.constraint(equalToConstant: 165),
+            contentTextView.widthAnchor.constraint(equalToConstant: 344)
             ])
     }
     
@@ -127,13 +124,19 @@ class AddItemVC: UIViewController {
     }
     
     @objc func addPressed(){
-        print("Added")
         guard let title = self.titleTextField.text else {
             return
         }
-        let addItem = ToDoItem(title: title)
-        addItem.content  = self.contentTextField.text
-        self.delegate?.didAdd(item: addItem)
+        if title != ""{
+            print("Added")
+            let addItem = ToDoItem(title: title)
+            if self.contentTextView.text != ""{
+                addItem.content  = self.contentTextView.text
+            }
+            self.delegate?.didAdd(item: addItem)
+        }else{
+            print("Non title")
+        }
         
         navigationController?.popToRootViewController(animated: true)
     }

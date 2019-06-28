@@ -11,13 +11,12 @@ class ToDoItem {
     var title: String
     var startDate: String
     var endDate: String?
-    var content: String?
-    var isDone: Bool
+    var content: String = "No content"
+    var isDone: Bool = false
     
     init(title: String) {
         self.title = title
-        self.isDone = false
-        
+
         let date = Date()
         let calendar = Calendar.current
         let day = calendar.component(.day, from: date)

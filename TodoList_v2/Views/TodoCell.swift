@@ -8,15 +8,14 @@
 
 import UIKit
 
-protocol ToDoCellTableViewCellDelegate : class{
-    func didComplete(item: ToDoItem)
-}
 
 class TodoCell: UITableViewCell {
 
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        updateUICell()
+        print("1")
     }
     
     var dateLbl: UILabel = {
@@ -29,39 +28,27 @@ class TodoCell: UITableViewCell {
     var todoTitleLbl: UILabel = {
         let lbl = UILabel()
         lbl.sizeToFit()
-        lbl.font = UIFont.systemFont(ofSize: 13)
+        lbl.font = UIFont.systemFont(ofSize: 14)
         return lbl
     }()
     
-    var checkBox: UIButton = {
-        let btn = UIButton()
-        
-        btn.isEnabled = true
-        btn.setImage(UIImage(named: "uncheck_icon"), for: .normal)
-        btn.setImage(UIImage(named: "checked_icon"), for: .selected)
-
-        return btn
-        }()
-    
-    var endDateLbl: UILabel = {
+    var contentLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = .red
-        lbl.textAlignment = .center
+        lbl.sizeToFit()
+        lbl.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        lbl.numberOfLines = 0
+//        lbl.isEditable = false
+//        lbl.isScrollEnabled = false
         lbl.font = UIFont.systemFont(ofSize: 13)
-        lbl.isHidden = true
+        lbl.isUserInteractionEnabled = false
         return lbl
     }()
     
     var item : ToDoItem!
     
-    weak var delegate:ToDoCellTableViewCellDelegate?
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         self.layoutCell()
-        
-        checkBox.addTarget(self, action: #selector(checkedBox), for: .touchUpInside)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -71,55 +58,36 @@ class TodoCell: UITableViewCell {
     func layoutCell(){
         addSubview(dateLbl)
         addSubview(todoTitleLbl)
-        addSubview(checkBox)
-        addSubview(endDateLbl)
+        addSubview(contentLabel)
         
         dateLbl.translatesAutoresizingMaskIntoConstraints = false
         todoTitleLbl.translatesAutoresizingMaskIntoConstraints = false
-        checkBox.translatesAutoresizingMaskIntoConstraints = false
-        endDateLbl.translatesAutoresizingMaskIntoConstraints = false
+        contentLabel.translatesAutoresizingMaskIntoConstraints = false
+
         
         NSLayoutConstraint.activate([
             dateLbl.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
-            dateLbl.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            dateLbl.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
             dateLbl.heightAnchor.constraint(equalToConstant: 11),
             dateLbl.widthAnchor.constraint(equalToConstant: 36),
             
-            todoTitleLbl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
+            todoTitleLbl.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
             todoTitleLbl.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             todoTitleLbl.heightAnchor.constraint(equalToConstant: 13),
             todoTitleLbl.widthAnchor.constraint(equalToConstant: 200),
             
-            checkBox.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
-            checkBox.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            checkBox.heightAnchor.constraint(equalToConstant: 32),
-            checkBox.widthAnchor.constraint(equalToConstant: 32),
+            contentLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
+            contentLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant:  10),
+            contentLabel.topAnchor.constraint(equalTo: dateLbl.bottomAnchor, constant: 5),
+            contentLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
             
-            endDateLbl.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
-            endDateLbl.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            endDateLbl.heightAnchor.constraint(equalToConstant: 13),
-            endDateLbl.widthAnchor.constraint(equalToConstant: 35),
             ])
         
     }
     
-    func updateUICell(item: ToDoItem){
-        self.item = item
-        self.dateLbl.text = item.startDate
-        self.todoTitleLbl.text = item.title
-        
-        guard let endDate = item.endDate else {
-            self.endDateLbl.isHidden = true
-            self.checkBox.isHidden = false
-            return
-        }
-        self.endDateLbl.isHidden = false
-        self.endDateLbl.text = endDate
-        self.checkBox.isHidden = true
+    func updateUICell(){
+        self.dateLbl.text = self.item.startDate
+        self.todoTitleLbl.text = self.item.title
+        self.contentLabel.text = self.item.content
     }
-    
-    @objc func checkedBox(_ sender: UIButton) {
-        delegate?.didComplete(item: self.item)
-    }
-
 }
