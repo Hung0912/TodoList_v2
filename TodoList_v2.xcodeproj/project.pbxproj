@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -65,7 +65,6 @@
 				60EADF8422C50D660035868B /* Models */,
 				60EADF8222C50D580035868B /* Views */,
 				60EADF8322C50D600035868B /* Controllers */,
-				60EADF8122C50D470035868B /* Files */,
 				047913EB22C49DB700037769 /* AppDelegate.swift */,
 				047913EF22C49DB700037769 /* Main.storyboard */,
 				047913F222C49DB900037769 /* Assets.xcassets */,
@@ -73,13 +72,6 @@
 				047913F722C49DB900037769 /* Info.plist */,
 			);
 			path = TodoList_v2;
-			sourceTree = "<group>";
-		};
-		60EADF8122C50D470035868B /* Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Files;
 			sourceTree = "<group>";
 		};
 		60EADF8222C50D580035868B /* Views */ = {

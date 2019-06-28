@@ -35,9 +35,9 @@ class AddItemVC: UIViewController {
     
     var titleTextField : UITextField = {
         let tf = UITextField()
-        tf.backgroundColor = UIColor.lightGray
+        tf.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         tf.font = UIFont.systemFont(ofSize: 13)
-        
+        tf.autocorrectionType = .no
         tf.borderStyle = UITextField.BorderStyle.roundedRect
         return tf
     }()
@@ -52,11 +52,12 @@ class AddItemVC: UIViewController {
     
     var contentTextField : UITextField = {
         let tf = UITextField()
-        tf.backgroundColor = .lightGray
+        tf.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         tf.font = UIFont.systemFont(ofSize: 13)
         tf.textAlignment = .left
         tf.contentVerticalAlignment = .top
         tf.borderStyle = UITextField.BorderStyle.roundedRect
+        tf.autocorrectionType = .no
         return tf
     }()
     
@@ -127,7 +128,9 @@ class AddItemVC: UIViewController {
     
     @objc func addPressed(){
         print("Added")
-        guard let title = self.titleTextField.text else {return}
+        guard let title = self.titleTextField.text else {
+            return
+        }
         let addItem = ToDoItem(title: title)
         addItem.content  = self.contentTextField.text
         self.delegate?.didAdd(item: addItem)

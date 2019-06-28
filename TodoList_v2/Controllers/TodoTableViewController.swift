@@ -33,7 +33,7 @@ class TodoTableViewController: UITableViewController{
         if let image = UIImage(named:"plus_icon") {
             button.setImage(image, for: .normal)
         }
-        button.addTarget(self, action: #selector(addClicked), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
         let barButton = UIBarButtonItem(customView: button)
         navigationItem.rightBarButtonItem = barButton
     }
@@ -79,17 +79,15 @@ class TodoTableViewController: UITableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TodoCell{
             cell.delegate = self
+            var todoItem: ToDoItem!
             if indexPath.section == 0 {
-                print("Dmmmmmmmm")
-                let item = doingList[indexPath.row]
-                cell.item = item
-                cell.updateUICell(item: item)
+                //print("Dmmmmmmmm")
+                todoItem = doingList[indexPath.row]
             }
             if indexPath.section == 1 {
-                let item = completedList[indexPath.row]
-                cell.item = item
-                cell.updateUICell(item: item)
+                todoItem = completedList[indexPath.row]
             }
+            cell.updateUICell(item: todoItem)
             return cell
         }
         return UITableViewCell()
@@ -101,7 +99,7 @@ class TodoTableViewController: UITableViewController{
     // Header of section
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?{
         let headerView = UIView()
-        headerView.backgroundColor = UIColor.lightGray
+        headerView.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         
         let headerIcon = UIImageView(image: UIImage(named: "list_icon"))
         headerIcon.frame = CGRect(x: 5, y: 5, width: 32, height: 32)
@@ -110,6 +108,7 @@ class TodoTableViewController: UITableViewController{
         let headerTitle = UILabel(frame: CGRect(x: 42, y: 5, width: 100, height: 35))
         headerTitle.font = UIFont.systemFont(ofSize: 15)
         headerTitle.textAlignment = .left
+        
         if section == 0 {
             headerTitle.text = "List"
         }else if section == 1 {
@@ -139,11 +138,10 @@ class TodoTableViewController: UITableViewController{
         self.navigationController?.pushViewController(detailScreen, animated: true)
         
         detailScreen.delegate = self
-        //TODO
     }
     
     
-    @objc func addClicked(){
+    @objc func addTapped(){
         let addScreen = AddItemVC()
         self.navigationController?.pushViewController(addScreen, animated: true)
         addScreen.delegate = self

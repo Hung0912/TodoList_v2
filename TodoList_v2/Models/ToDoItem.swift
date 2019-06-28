@@ -5,10 +5,9 @@
 //  Created by HungPB on 6/27/19.
 //  Copyright © 2019 HungPB. All rights reserved.
 //
-
 import Foundation
 
-class ToDoItem{
+class ToDoItem {
     var title: String
     var startDate: String
     var endDate: String?

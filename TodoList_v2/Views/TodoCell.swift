@@ -104,6 +104,7 @@ class TodoCell: UITableViewCell {
     }
     
     func updateUICell(item: ToDoItem){
+        self.item = item
         self.dateLbl.text = item.startDate
         self.todoTitleLbl.text = item.title
         

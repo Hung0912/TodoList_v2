@@ -40,9 +40,9 @@ class ItemDetailVC: UIViewController {
     
     var titleTextField : UITextField = {
         let tf = UITextField()
-        tf.backgroundColor = UIColor.lightGray
+        tf.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         tf.font = UIFont.systemFont(ofSize: 13)
-        
+        tf.autocorrectionType = .no
         tf.borderStyle = UITextField.BorderStyle.roundedRect
         return tf
     }()
@@ -57,10 +57,11 @@ class ItemDetailVC: UIViewController {
     
     var contentTextField : UITextField = {
         let tf = UITextField()
-        tf.backgroundColor = .lightGray
+        tf.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         tf.font = UIFont.systemFont(ofSize: 13)
         tf.textAlignment = .left
         tf.contentVerticalAlignment = .top
+        tf.autocorrectionType = .no
         tf.borderStyle = UITextField.BorderStyle.roundedRect
         return tf
     }()
@@ -138,8 +139,8 @@ class ItemDetailVC: UIViewController {
     
     @objc func savePressed(){
         print("Saved")
-        guard let titlt = self.titleTextField.text else { return}
-        self.item.title = titlt
+        guard let title = self.titleTextField.text else { return}
+        self.item.title = title
         self.item.content = self.contentTextField.text
         self.delegate?.didSave(item: self.item)
         
